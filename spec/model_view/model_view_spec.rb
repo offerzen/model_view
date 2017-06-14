@@ -79,16 +79,48 @@ describe ModelView do
     end
 
     describe :include_scope do
-      it "adds the scope to the current scope's includes" do
-        dummy_class.scope :my_scope { include_scope :foo }
-        expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo])
+      context "given a single scope" do
+        it "adds the scope to the current scope's includes" do
+          dummy_class.scope :my_scope { include_scope :foo }
+          expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo])
+        end
+      end
+
+      context "given an array" do
+        it "adds all the scopes to the current scope's includes" do
+          dummy_class.scope :my_scope { include_scope [:foo, :bar] }
+          expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo, :bar])
+        end
+      end
+
+      context "given more than one scope" do
+        it "adds all the scopes to the current scope's includes" do
+          dummy_class.scope :my_scope { include_scope :foo, :bar }
+          expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo, :bar])
+        end
       end
     end
 
     describe :extend_scope do
-      it "adds the scope to the current scope's extends" do
-        dummy_class.scope :my_scope { extend_scope :foo }
-        expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo])
+      context "given a single scope" do
+        it "adds the scope to the current scope's extends" do
+          dummy_class.scope :my_scope { extend_scope :foo }
+          expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo])
+        end
+      end
+
+      context "given an array" do
+        it "adds all the scopes to the current scope's extends" do
+          dummy_class.scope :my_scope { extend_scope [:foo, :bar] }
+          expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo, :bar])
+        end
+      end
+
+      context "given more than one scope" do
+        it "adds all the scopes to the current scope's extends" do
+          dummy_class.scope :my_scope { extend_scope :foo, :bar }
+          expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo, :bar])
+        end
       end
     end
   end

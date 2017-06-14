@@ -14,14 +14,14 @@ module ModelView
     @current_scope = nil
   end
 
-  def include_scope(scope)
+  def include_scope(*scope)
     raise Exception.new("Root scope can not include another scope") if @current_scope.nil? || @current_scope == :__root__
-    @scopes[@current_scope][:includes] << scope
+    scope.flatten.each { |s| @scopes[@current_scope][:includes] << s }
   end
 
-  def extend_scope(scope)
+  def extend_scope(*scope)
     raise Exception.new("Root scope can not extend another scope") if @current_scope.nil? || @current_scope == :__root__
-    @scopes[@current_scope][:extends] << scope
+    scope.flatten.each { |s| @scopes[@current_scope][:extends] << s }
   end
 
   def scopes
