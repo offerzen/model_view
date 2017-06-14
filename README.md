@@ -6,7 +6,7 @@ ModelView let's you define views for your models in one place.
 ### Why ModelView?
 
 At OfferZen, most of our rails models can be presented in al least two ways. For example, an Interview Request
-is presented differently to a candidate than to a company. But, there is also a lot of fields that get presented
+is presented differently to a candidate than to a company. But, there are also a lot of fields that get presented
 the same to both candidates and companies. We found ourselves duplicating a lot of our serialisation code in our
 controllers and the code started to get out of hand.
 
@@ -14,7 +14,7 @@ ModelView works with Rails, but Rails is definitely not a requirement
 
 ### How to use ModelView
 
-1) Include the yem in your gemfile
+1) Include the gem in your gemfile
 ```ruby
 gem "model_view", '~> 0.1'
 ```
@@ -33,8 +33,8 @@ field :name
 
 field(:first_name) { |person| person.name.split(' ').first }
 
-field :is_current_user, context[:current_user] do |person|
-  person.name.split(' ').first
+field :is_current_user, context[:current_user] do |person, current_user|
+  person == current_user
 end
 ```
 4) Let ModelView serialise an instance
@@ -64,8 +64,8 @@ scope :demographics do
 end
 
 scope :status do
-  field :is_current_user, context[:current_user] do |person|
-    person.name.split(' ').first
+  field :is_current_user, context[:current_user] do |person, current_user|
+    person == current_user
   end
 end
 
