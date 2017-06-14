@@ -60,7 +60,7 @@ field :id
 scope :demographics do
   field :name
   field(:first_name) { |person| person.name.split(' ').first }
-  field(:last_name) { |person| person.name.split(' ').first }
+  field(:last_name) { |person| person.name.split(' ').last }
 end
 
 scope :status do
@@ -78,13 +78,13 @@ end
 ```ruby
 person = Person.find(1)
 
-PersonView.as_hash(person, context: {current_user: current_user})
+PersonView.as_hash(person, {context: {current_user: current_user}})
 => {
   id: 1
 }
 
 
-PersonView.as_hash(person, context: {current_user: current_user, scope: :demographics})
+PersonView.as_hash(person, {context: {current_user: current_user}, scope: :demographics})
 => {
   id:   1,
   name: "Billy Bob",
@@ -92,7 +92,7 @@ PersonView.as_hash(person, context: {current_user: current_user, scope: :demogra
   last_name: "Bob",
 }
 
-PersonView.as_hash(person, context: {current_user: current_user, scope: :all})
+PersonView.as_hash(person, {context: {current_user: current_user}, scope: :all})
 => {
   id:   1,
   name: "Billy Bob",
