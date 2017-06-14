@@ -43,12 +43,12 @@ module ModelView
   private
 
   def add_scope(scope_name)
-    @scopes ||= {}
+    @scopes ||= {ROOT =>  {fields: {}, extends: [], includes: []}}
     @scopes[scope_name] = {fields: {}, extends: [], includes: []}
   end
 
   def add_field(scope, field_name, args, block)
-    @scopes ||= {}
+    @scopes ||= {ROOT =>  {fields: {}, extends: [], includes: []}}
     @scopes[scope] ||= {fields: {}, extends: [], includes: []}
     @scopes[scope][:fields][field_name] = {args: args, block: block}
   end
