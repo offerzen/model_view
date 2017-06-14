@@ -1,6 +1,10 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'model_view/version'
+
 Gem::Specification.new do |spec|
   spec.name        = 'model_view'
-  spec.version     = '0.0.0'
+  spec.version     = ModelView::VERSION
   spec.date        = '2017-06-13'
   spec.summary     = "Composable serialisation for models"
   spec.description = "Composable serialisation for models"
