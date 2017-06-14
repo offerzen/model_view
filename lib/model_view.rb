@@ -1,7 +1,11 @@
+require 'model_view/resolver'
+
 module ModelView
 
+  ROOT = :__root__
+
   def field(field_name, arg={}, &block)
-    scope_name = @current_scope || :__root__
+    scope_name = @current_scope || ROOT
     add_field scope_name, field_name, arg, block
   end
 
@@ -19,17 +23,21 @@ module ModelView
   end
 
   def include_scope(*scope)
-    raise Exception.new("Root scope can not include another scope") if @current_scope.nil? || @current_scope == :__root__
+    raise Exception.new("Root scope can not include another scope") if @current_scope.nil? || @current_scope == ROOT
     scope.flatten.each { |s| @scopes[@current_scope][:includes] << s }
   end
 
   def extend_scope(*scope)
-    raise Exception.new("Root scope can not extend another scope") if @current_scope.nil? || @current_scope == :__root__
+    raise Exception.new("Root scope can not extend another scope") if @current_scope.nil? || @current_scope == ROOT
     scope.flatten.each { |s| @scopes[@current_scope][:extends] << s }
   end
 
   def scopes
     @scopes
+  end
+
+  def as_hash(object, scope=nil, context={})
+    ModelView::Resolver.resolve(object, @scopes, scope || ROOT, context)
   end
 
   private
@@ -44,4 +52,5 @@ module ModelView
     @scopes[scope] ||= {fields: {}, extends: [], includes: []}
     @scopes[scope][:fields][field_name] = {args: args, block: block}
   end
+
 end

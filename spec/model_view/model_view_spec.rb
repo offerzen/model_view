@@ -14,6 +14,7 @@ describe ModelView do
           scope_fields = dummy_class.scopes[root_scope][:fields]
           expect(scope_fields[:a_field]).to eq({args: {}, block: nil})
         end
+
         context "with arguments" do
           it "adds the field to the root scope" do
             dummy_class.field :a_field, {foo: 1}
