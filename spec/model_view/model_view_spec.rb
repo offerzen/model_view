@@ -36,6 +36,15 @@ describe ModelView do
       end
     end
 
+    describe :fields do
+      it "adds all the fields to the root scope" do
+        dummy_class.fields :field_1, :field_2, :field_3
+
+        scope_fields = dummy_class.scopes[root_scope][:fields]
+        expect(scope_fields.keys).to eq([:field_1, :field_2, :field_3])
+      end
+    end
+
     describe :include_scope do
       it "raises an error" do
         expect { dummy_class.include_scope :a_field }.to raise_error "Root scope can not include another scope"
@@ -75,6 +84,15 @@ describe ModelView do
 
         expect(scope_fields.keys).to include(:foo)
         expect(root_scope_fields.keys).to include(:bar)
+      end
+    end
+
+    describe :fields do
+      it "adds all the fields to the current scope" do
+        dummy_class.scope :foo_scope { fields :field_1, :field_2, :field_3 }
+
+        scope_fields = dummy_class.scopes[:foo_scope][:fields]
+        expect(scope_fields.keys).to eq([:field_1, :field_2, :field_3])
       end
     end
 

@@ -5,6 +5,10 @@ module ModelView
     add_field scope_name, field_name, arg, block
   end
 
+  def fields(*fields)
+    fields.flatten.each { |f| field f }
+  end
+
   def scope(scope_name, &block)
     sym_scope_name = scope_name.to_sym
     add_scope(sym_scope_name)
