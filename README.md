@@ -49,6 +49,35 @@ PersonView.as_hash(person, context: {current_user: current_user})
 }
 ```
 
+#### 🐒-patching the model
+
+ModelView can add a convenience method to the model class
+
+Example
+```ruby
+class PersonModelView
+  model Person
+  field :id
+end
+
+p = Person.find 1
+
+p.as_hash(context: {current_user: current_user})
+=> {
+  id: 1
+}
+```
+
+When using ModelView in Rails, remember to add an initializer that requires your model views.
+
+Example initializer:
+```ruby
+# require.rb
+Dir["#{Rails.root}/app/model_views/*.rb"].each do |file|
+  require File.basename(file, File.extname(file))
+end
+```
+
 #### Scopes
 
 Scopes allows you to create serialisation snippets that can be composed

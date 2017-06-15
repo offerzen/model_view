@@ -143,4 +143,29 @@ describe ModelView do
       end
     end
   end
+
+  describe :model do
+    before do
+      class MyModel
+
+      end
+    end
+
+    it "adds an as_hash method to the model" do
+      dummy_class.model MyModel
+
+      expect(MyModel.new).to respond_to(:as_hash)
+    end
+
+    it "adds an as_hash method to the model that defers to the model view's as_hash method" do
+      dummy_class.model MyModel
+      instance = MyModel.new
+
+      expect(dummy_class).to receive(:as_hash).with(instance, {})
+
+      instance.as_hash({})
+    end
+
+  end
+
 end

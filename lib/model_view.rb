@@ -36,10 +36,19 @@ module ModelView
     @scopes
   end
 
-  def as_hash(object, opts={} )
+  def as_hash(object, opts={})
     scope = opts[:scope] || ROOT
     context = opts[:context] || {}
     ModelView::Resolver.resolve(object, @scopes, scope , context)
+  end
+
+  def model(model_class)
+    model_view_class = self
+    model_class.class_eval do
+      define_method(:as_hash) do |opts|
+        model_view_class.as_hash(self, opts)
+      end
+    end
   end
 
   private
