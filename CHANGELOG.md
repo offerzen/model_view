@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.2.0
+* ModelView can add a convenience method to the model class
+
+
 # 0.1.3
 * Readme fixes
 
