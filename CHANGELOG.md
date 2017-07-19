@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.3.0
+* ModelView can be used to update models
+
+
 # 0.2.0
 * ModelView can add a convenience method to the model class
 
