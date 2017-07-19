@@ -13,7 +13,8 @@ describe ModelView::Updater do
         setters: {
           field1: {},
           field3: {block: Proc.new { |obj, data| obj.field3 = data + 2 }}
-        }
+        },
+        after_update: Proc.new { |obj| obj.save }
       },
       scope1: {
         fields: {
@@ -56,6 +57,10 @@ describe ModelView::Updater do
     before do
       class Dummy
         attr_accessor *(1..12).map { |n| "field#{n}".to_sym }
+
+        def save
+
+        end
       end
     end
 
@@ -77,6 +82,11 @@ describe ModelView::Updater do
         it "uses a block to set the value, if available" do
           ModelView::Updater.update(instance, scopes, data)
           expect(instance.field3).to eq(4)
+        end
+
+        it "runs the after_update block, if provided" do
+          expect(instance).to receive(:save)
+          ModelView::Updater.update(instance, scopes, data)
         end
       end
     end

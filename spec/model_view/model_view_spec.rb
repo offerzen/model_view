@@ -91,6 +91,15 @@ describe ModelView do
         end
       end
     end
+
+    describe :after_update do
+      it "adds an after_update block" do
+        dummy_class.after_update { |obj| obj.save }
+
+        after_update = dummy_class.scopes[root_scope][:after_update]
+        expect(after_update).to be_a(Proc)
+      end
+    end
   end
 
   context "within a scope" do

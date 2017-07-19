@@ -16,6 +16,9 @@ module ModelView
 
           setter.call(obj, value) if setter
         end
+
+        after_update = after_update_for_scope(scope, scopes)
+        after_update.call(obj) if after_update
       end
 
       private
@@ -26,6 +29,18 @@ module ModelView
         else
           lambda { |obj, value| obj.send("#{key}=", value) }
         end
+      end
+
+      def after_update_for_scope(scope, scopes)
+        extended_scopes = scopes[scope][:extends] || []
+        first_extended_after_update = extended_scopes.reduce(nil) do |res, s|
+          res || extract_after_update(s, scopes)
+        end
+
+        extract_after_update(scope, scopes) ||
+        first_extended_after_update ||
+        extract_after_update(ModelView::ROOT, scopes)
+
       end
 
       def setters_for_scope(scope, scope_data)
@@ -51,6 +66,11 @@ module ModelView
       def extract_setters(scope, scope_data)
         scope_data[scope][:setters]
       end
+
+      def extract_after_update(scope, scope_data)
+        scope_data[scope][:after_update]
+      end
+
     end
   end
 end

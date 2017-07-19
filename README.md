@@ -33,7 +33,7 @@ field :name
 
 field(:first_name) { |person| person.name.split(' ').first }
 
-field :is_current_user, context[:current_user] do |person, current_user|
+field :is_current_user, {context: current_user} do |person, current_user|
   person == current_user
 end
 ```
@@ -129,4 +129,41 @@ PersonView.as_hash(person, {context: {current_user: current_user}, scope: :all})
   last_name: "Bob",
   is_current_user: true
 }
+```
+
+#### Updating models
+`ModelView` can also be used to update models. This is achieved by creating setters.
+
+The easiest way to create a setter is to set the `setter` flag to true when defining a field:
+```ruby
+field :name, setter: true
+```
+
+Setters can also be defined outside of the `field` macro:
+```ruby
+setter :name
+```
+
+Setters defined in this way are naive (`obj.send("#{field}=", value)`) and will not automatically call the `save` method on the model. See below on how to create an `after_update` hook.
+
+Finally, for more complex updaters, a block can be passed:
+```ruby
+setter(:name) do |obj, name|
+  first_name, last_name = name.split(" ")
+  obj.first_name = first_name
+  obj.last_name = last_name
+  obj.save!
+end
+```
+
+To avoid having to explicitly save the model in every block, one can define an `after_save` block:
+```ruby
+after_save { |obj| obj.save! }
+
+field :telephone_number, setter: true
+setter(:name) do |obj, name|
+  first_name, last_name = name.split(" ")
+  obj.first_name = first_name
+  obj.last_name = last_name
+end
 ```

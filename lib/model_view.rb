@@ -38,6 +38,11 @@ module ModelView
     scope.flatten.each { |s| @scopes[@current_scope][:extends] << s }
   end
 
+  def after_update(&block)
+    scope_name = @current_scope || ROOT
+    add_after_update scope_name, block
+  end
+
   def scopes
     @scopes
   end
@@ -46,6 +51,11 @@ module ModelView
     scope = opts[:scope] || ROOT
     context = opts[:context] || {}
     ModelView::Resolver.resolve(object, @scopes, scope , context)
+  end
+
+  def update(object, data, opts={})
+    scope = opts[:scope] || ROOT
+    ModelView::Updater.update(object, @scopes, data , scope)
   end
 
   def model(model_class)
@@ -60,7 +70,13 @@ module ModelView
   private
 
   def new_opts
-    {fields: {}, extends: [], includes: [], setters: {}}
+    {fields: {}, extends: [], includes: [], setters: {}, after_update: nil}
+  end
+
+  def add_after_update(scope, block)
+    @scopes ||= {ROOT =>  new_opts}
+    @scopes[scope] ||= new_opts
+    @scopes[scope][:after_update] = block
   end
 
   def add_scope(scope_name)
