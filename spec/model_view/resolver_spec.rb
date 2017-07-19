@@ -130,6 +130,5 @@ describe ModelView::Resolver do
       end
     end
 
-
   end
 end

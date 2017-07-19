@@ -23,6 +23,18 @@ describe ModelView do
             expect(scope_fields[:a_field]).to eq({args: {foo: 1}, block: nil})
           end
         end
+
+        context "with setter set to true" do
+          it "adds the field and setter to the root scope" do
+            dummy_class.field :a_field, {setter: true}
+
+            scope_fields = dummy_class.scopes[root_scope][:fields]
+            expect(scope_fields[:a_field]).to eq({args: {}, block: nil})
+
+            scope_setters = dummy_class.scopes[root_scope][:setters]
+            expect(scope_setters[:a_field]).to eq({args: {}, block: nil})
+          end
+        end
       end
 
       context "with a block" do
@@ -55,6 +67,28 @@ describe ModelView do
     describe :extend_scope do
       it "raises an error" do
         expect { dummy_class.extend_scope :a_field }.to raise_error "Root scope can not extend another scope"
+      end
+    end
+
+    describe :setter do
+      context "without a block" do
+        it "adds the setter to the root scope" do
+          dummy_class.setter :a_field
+
+          scope_setters = dummy_class.scopes[root_scope][:setters]
+          expect(scope_setters[:a_field]).to eq({args: {}, block: nil})
+        end
+      end
+
+      context "with a block" do
+        it "adds the seter to the root scope" do
+          dummy_class.setter :a_field { 1 + 1 }
+
+          scope_setters = dummy_class.scopes[root_scope][:setters]
+
+          expect(scope_setters[:a_field][:args]).to eq({})
+          expect(scope_setters[:a_field][:block].call).to eq(2)
+        end
       end
     end
   end
@@ -142,6 +176,29 @@ describe ModelView do
         end
       end
     end
+
+    describe :setter do
+      context "without a block" do
+        it "adds the setter to the root scope" do
+          dummy_class.scope :my_scope { setter :a_field }
+
+          scope_setters = dummy_class.scopes[:my_scope][:setters]
+          expect(scope_setters[:a_field]).to eq({args: {}, block: nil})
+        end
+      end
+
+      context "with a block" do
+        it "adds the seter to the root scope" do
+          dummy_class.scope :my_scope { setter :a_field { 1 + 1 } }
+
+          scope_setters = dummy_class.scopes[:my_scope][:setters]
+
+          expect(scope_setters[:a_field][:args]).to eq({})
+          expect(scope_setters[:a_field][:block].call).to eq(2)
+        end
+      end
+    end
+
   end
 
   describe :model do

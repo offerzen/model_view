@@ -1,4 +1,5 @@
 require 'model_view/resolver'
+require 'model_view/updater'
 
 module ModelView
 
@@ -20,6 +21,11 @@ module ModelView
     @current_scope = sym_scope_name
     instance_eval &block
     @current_scope = nil
+  end
+
+  def setter(field_name, arg={}, &block)
+    scope_name = @current_scope || ROOT
+    add_setter scope_name, field_name, arg, block
   end
 
   def include_scope(*scope)
@@ -53,15 +59,28 @@ module ModelView
 
   private
 
+  def new_opts
+    {fields: {}, extends: [], includes: [], setters: {}}
+  end
+
   def add_scope(scope_name)
-    @scopes ||= {ROOT =>  {fields: {}, extends: [], includes: []}}
-    @scopes[scope_name] = {fields: {}, extends: [], includes: []}
+    @scopes ||= {ROOT => new_opts}
+    @scopes[scope_name] = new_opts
   end
 
   def add_field(scope, field_name, args, block)
-    @scopes ||= {ROOT =>  {fields: {}, extends: [], includes: []}}
-    @scopes[scope] ||= {fields: {}, extends: [], includes: []}
-    @scopes[scope][:fields][field_name] = {args: args, block: block}
+    @scopes ||= {ROOT =>  new_opts}
+    @scopes[scope] ||= new_opts
+    if args[:setter]
+      add_setter(scope, field_name, {}, nil)
+    end
+    @scopes[scope][:fields][field_name] = {args: args.select{ |k| k != :setter}, block: block}
+  end
+
+  def add_setter(scope, field_name, args, block)
+    @scopes ||= {ROOT =>  new_opts}
+    @scopes[scope] ||= new_opts
+    @scopes[scope][:setters][field_name] = {args: args, block: block}
   end
 
 end
