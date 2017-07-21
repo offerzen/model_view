@@ -156,9 +156,9 @@ setter(:name) do |obj, name|
 end
 ```
 
-To avoid having to explicitly save the model in every block, one can define an `after_save` block:
+To avoid having to explicitly save the model in every block, one can define an `after_update` block:
 ```ruby
-after_save { |obj| obj.save! }
+after_update { |obj| obj.save! }
 
 field :telephone_number, setter: true
 setter(:name) do |obj, name|
@@ -166,4 +166,9 @@ setter(:name) do |obj, name|
   obj.first_name = first_name
   obj.last_name = last_name
 end
+```
+
+Models can then be updated using ModelView.update:
+```ruby
+PersonView.update(person, {phone: "+123 456 7890"}, scope: :contact_details)
 ```
