@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.4.0
+* Added constant and alias_for helpers
+
+
 # 0.3.0
 * ModelView can be used to update models
 
