@@ -36,7 +36,11 @@ module ModelView
       private
 
       def evaluate_field(object, field_name, options, block, context)
-        if block.nil?
+        if options && options[:constant]
+          options[:constant]
+        elsif options && options[:alias_for]
+          object.send(options[:alias_for])
+        elsif block.nil?
           object.send(field_name)
         else
           if block.arity == 1

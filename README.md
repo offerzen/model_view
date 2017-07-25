@@ -36,7 +36,13 @@ field(:first_name) { |person| person.name.split(' ').first }
 field :is_current_user, {context: current_user} do |person, current_user|
   person == current_user
 end
+
+field :type, constant: 'User'
+
+field :person_name, alias_for: :name
 ```
+
+
 4) Let ModelView serialise an instance
 
 ```ruby

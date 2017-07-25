@@ -15,7 +15,9 @@ describe ModelView::Resolver do
         fields: {
           field4: {block: Proc.new { |obj| obj.field4 + obj.field1 }},
           field5: {},
-          field6: {}
+          field6: {},
+          field7a: {args: {constant: 'foo'}},
+          field7b: {args: {alias_for: :field5}},
         },
       },
       scope2: {
@@ -98,6 +100,20 @@ describe ModelView::Resolver do
       it "returns the resolved root-scope fields" do
         res = ModelView::Resolver.resolve(instance, scopes)
         expect(res).to eq({field1: 1, field2: 2, field3: 3})
+      end
+    end
+
+    context "fields with a constant" do
+      it "resolves to the constant" do
+        res = ModelView::Resolver.resolve(instance, scopes, :scope1)
+        expect(res[:field7a]).to eq('foo')
+      end
+    end
+
+    context "fields with an alias" do
+      it "resolves to the aliased property" do
+        res = ModelView::Resolver.resolve(instance, scopes, :scope1)
+        expect(res[:field7b]).to eq(5)
       end
     end
 
