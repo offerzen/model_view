@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.4.1
+* Make setters more robust
+
+
 # 0.4.0
 * Added constant and alias_for helpers
 
