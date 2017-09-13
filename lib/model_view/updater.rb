@@ -7,7 +7,7 @@ module ModelView
 
         setters = setters_for_scope(scope, scopes)
 
-        data.each do |key, value|
+        data.symbolize_keys.each do |key, value|
           setter = if !setters[key].nil?
             setter_for_key(setters, key)
           else
@@ -61,6 +61,7 @@ module ModelView
           .merge(scope_setters)
           .merge(extended_setters)
           .merge(included_setters)
+          .with_indifferent_access
       end
 
       def extract_setters(scope, scope_data)
