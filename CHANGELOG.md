@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.5.0
+* Transfer field args to setters
+
+
 # 0.4.1
 * Make setters more robust
 
