@@ -87,10 +87,11 @@ module ModelView
   def add_field(scope, field_name, args, block)
     @scopes ||= {ROOT =>  new_opts}
     @scopes[scope] ||= new_opts
+    cleaned_args = args.select{ |k| k != :setter}
     if args[:setter]
-      add_setter(scope, field_name, {}, nil)
+      add_setter(scope, field_name, cleaned_args, nil)
     end
-    @scopes[scope][:fields][field_name] = {args: args.select{ |k| k != :setter}, block: block}
+    @scopes[scope][:fields][field_name] = {args: cleaned_args, block: block}
   end
 
   def add_setter(scope, field_name, args, block)

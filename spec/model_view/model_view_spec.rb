@@ -26,13 +26,13 @@ describe ModelView do
 
         context "with setter set to true" do
           it "adds the field and setter to the root scope" do
-            dummy_class.field :a_field, {setter: true}
+            dummy_class.field :a_field, {setter: true, arg1: "foo"}
 
             scope_fields = dummy_class.scopes[root_scope][:fields]
-            expect(scope_fields[:a_field]).to eq({args: {}, block: nil})
+            expect(scope_fields[:a_field]).to eq({args: {arg1: "foo"}, block: nil})
 
             scope_setters = dummy_class.scopes[root_scope][:setters]
-            expect(scope_setters[:a_field]).to eq({args: {}, block: nil})
+            expect(scope_setters[:a_field]).to eq({args: {arg1: "foo"}, block: nil})
           end
         end
       end
