@@ -39,7 +39,7 @@ describe ModelView do
 
       context "with a block" do
         it "adds the field to the root scope" do
-          dummy_class.field :a_field { 1 + 1 }
+          dummy_class.field(:a_field) { 1 + 1 }
 
           scope_fields = dummy_class.scopes[root_scope][:fields]
 
@@ -82,7 +82,7 @@ describe ModelView do
 
       context "with a block" do
         it "adds the seter to the root scope" do
-          dummy_class.setter :a_field { 1 + 1 }
+          dummy_class.setter(:a_field) { 1 + 1 }
 
           scope_setters = dummy_class.scopes[root_scope][:setters]
 
@@ -105,7 +105,7 @@ describe ModelView do
   context "within a scope" do
     describe :scope do
       it "creates a scope" do
-        dummy_class.scope :a_scope {  }
+        dummy_class.scope(:a_scope) {  }
 
         expect(dummy_class.scopes.keys).to include(:a_scope)
       end
@@ -113,14 +113,14 @@ describe ModelView do
 
     describe :field do
       it "adds a field inside the scope" do
-        dummy_class.scope :a_scope { field :foo }
+        dummy_class.scope(:a_scope) { field :foo }
 
         scope_fields = dummy_class.scopes[:a_scope][:fields]
         expect(scope_fields.keys).to include(:foo)
       end
 
       it "changes the current scope back to root" do
-        dummy_class.scope :a_scope { field :foo }
+        dummy_class.scope(:a_scope) { field :foo }
         dummy_class.field :bar
 
         scope_fields = dummy_class.scopes[:a_scope][:fields]
@@ -133,7 +133,7 @@ describe ModelView do
 
     describe :fields do
       it "adds all the fields to the current scope" do
-        dummy_class.scope :foo_scope { fields :field_1, :field_2, :field_3 }
+        dummy_class.scope(:foo_scope) { fields :field_1, :field_2, :field_3 }
 
         scope_fields = dummy_class.scopes[:foo_scope][:fields]
         expect(scope_fields.keys).to eq([:field_1, :field_2, :field_3])
@@ -143,21 +143,21 @@ describe ModelView do
     describe :include_scope do
       context "given a single scope" do
         it "adds the scope to the current scope's includes" do
-          dummy_class.scope :my_scope { include_scope :foo }
+          dummy_class.scope(:my_scope) { include_scope :foo }
           expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo])
         end
       end
 
       context "given an array" do
         it "adds all the scopes to the current scope's includes" do
-          dummy_class.scope :my_scope { include_scope [:foo, :bar] }
+          dummy_class.scope(:my_scope) { include_scope [:foo, :bar] }
           expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo, :bar])
         end
       end
 
       context "given more than one scope" do
         it "adds all the scopes to the current scope's includes" do
-          dummy_class.scope :my_scope { include_scope :foo, :bar }
+          dummy_class.scope(:my_scope) { include_scope :foo, :bar }
           expect(dummy_class.scopes[:my_scope][:includes]).to eq([:foo, :bar])
         end
       end
@@ -166,21 +166,21 @@ describe ModelView do
     describe :extend_scope do
       context "given a single scope" do
         it "adds the scope to the current scope's extends" do
-          dummy_class.scope :my_scope { extend_scope :foo }
+          dummy_class.scope(:my_scope) { extend_scope :foo }
           expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo])
         end
       end
 
       context "given an array" do
         it "adds all the scopes to the current scope's extends" do
-          dummy_class.scope :my_scope { extend_scope [:foo, :bar] }
+          dummy_class.scope(:my_scope) { extend_scope [:foo, :bar] }
           expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo, :bar])
         end
       end
 
       context "given more than one scope" do
         it "adds all the scopes to the current scope's extends" do
-          dummy_class.scope :my_scope { extend_scope :foo, :bar }
+          dummy_class.scope(:my_scope) { extend_scope :foo, :bar }
           expect(dummy_class.scopes[:my_scope][:extends]).to eq([:foo, :bar])
         end
       end
@@ -189,7 +189,7 @@ describe ModelView do
     describe :setter do
       context "without a block" do
         it "adds the setter to the root scope" do
-          dummy_class.scope :my_scope { setter :a_field }
+          dummy_class.scope(:my_scope) { setter :a_field }
 
           scope_setters = dummy_class.scopes[:my_scope][:setters]
           expect(scope_setters[:a_field]).to eq({args: {}, block: nil})
@@ -198,7 +198,7 @@ describe ModelView do
 
       context "with a block" do
         it "adds the seter to the root scope" do
-          dummy_class.scope :my_scope { setter :a_field { 1 + 1 } }
+          dummy_class.scope(:my_scope) { setter(:a_field) { 1 + 1 } }
 
           scope_setters = dummy_class.scopes[:my_scope][:setters]
 
