@@ -122,7 +122,7 @@ describe ModelView do
           child_class = Class.new(dummy_class)
           child_class.field :b_field, {setter: true, arg1: "foo2"}
 
-          scope_setters = dummy_class.scopes[root_scope][:setters]
+          scope_setters = child_class.scopes[root_scope][:setters]
           expect(scope_setters[:a_field]).to eq({args: {arg1: "foo1"}, block: nil})
           expect(scope_setters[:b_field]).to eq({args: {arg1: "foo2"}, block: nil})
         end
@@ -136,7 +136,7 @@ describe ModelView do
           scope_fields = child_class.scopes[root_scope][:fields]
           expect(scope_fields[:a_field]).to eq({args: {arg1: "foo2"}, block: nil})
 
-          scope_setters = dummy_class.scopes[root_scope][:setters]
+          scope_setters = child_class.scopes[root_scope][:setters]
           expect(scope_setters[:a_field]).to eq({args: {arg1: "foo2"}, block: nil})
         end
       end

@@ -1,5 +1,6 @@
 require 'model_view/resolver'
 require 'model_view/updater'
+require 'active_support/core_ext/object'
 
 module ModelView
 
