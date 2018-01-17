@@ -47,6 +47,30 @@ describe ModelView do
           expect(scope_fields[:a_field][:block].call).to eq(2)
         end
       end
+
+      context "when a parent class has been defined" do
+        it "shares parent class fields" do
+          dummy_class.field(:a_field) { 1 + 1 }
+
+          child_class = Class.new(dummy_class)
+          child_class.field(:b_field) { 1 + 2 }
+
+          scope_fields = child_class.scopes[root_scope][:fields]
+          expect(scope_fields[:a_field][:block].call).to eq(2)
+          expect(scope_fields[:b_field][:block].call).to eq(3)
+        end
+
+        it "overwrites parent class field with child field correctly" do
+          dummy_class.field(:a_field) { 1 + 1 }
+
+          child_class = Class.new(dummy_class)
+          child_class.field(:a_field) { 1 + 2 }
+
+          scope_fields = child_class.scopes[root_scope][:fields]
+          expect(scope_fields[:a_field][:args]).to eq({})
+          expect(scope_fields[:a_field][:block].call).to eq(3)
+        end
+      end
     end
 
     describe :fields do
@@ -90,6 +114,32 @@ describe ModelView do
           expect(scope_setters[:a_field][:block].call).to eq(2)
         end
       end
+
+      context "when a parent class has been defined" do
+        it "shares parent class setter" do
+          dummy_class.field :a_field, {setter: true, arg1: "foo1"}
+
+          child_class = Class.new(dummy_class)
+          child_class.field :b_field, {setter: true, arg1: "foo2"}
+
+          scope_setters = dummy_class.scopes[root_scope][:setters]
+          expect(scope_setters[:a_field]).to eq({args: {arg1: "foo1"}, block: nil})
+          expect(scope_setters[:b_field]).to eq({args: {arg1: "foo2"}, block: nil})
+        end
+
+        it "overwrites parent class setter correctly" do
+          dummy_class.field :a_field, {setter: true, arg1: "foo"}
+
+          child_class = Class.new(dummy_class)
+          child_class.field :a_field, {setter: true, arg1: "foo2"}
+
+          scope_fields = child_class.scopes[root_scope][:fields]
+          expect(scope_fields[:a_field]).to eq({args: {arg1: "foo2"}, block: nil})
+
+          scope_setters = dummy_class.scopes[root_scope][:setters]
+          expect(scope_setters[:a_field]).to eq({args: {arg1: "foo2"}, block: nil})
+        end
+      end
     end
 
     describe :after_update do
@@ -98,6 +148,28 @@ describe ModelView do
 
         after_update = dummy_class.scopes[root_scope][:after_update]
         expect(after_update).to be_a(Proc)
+      end
+
+      context "when a parent class has been defined" do
+        it "child shares the parent after_update block" do
+          dummy_class.after_update { |obj| obj.save }
+
+          child_class = Class.new(dummy_class)
+          child_class.field(:a_field) { 1 + 2 }
+
+          after_update = child_class.scopes[root_scope][:after_update]
+          expect(after_update).to be_a(Proc)
+        end
+
+        it "overwrites the parent class after_update block correctly" do
+          dummy_class.after_update { |obj| obj.save }
+
+          child_class = Class.new(dummy_class)
+          child_class.after_update { 1 + 1 }
+
+          after_update = child_class.scopes[root_scope][:after_update]
+          expect(after_update.call('test')).to eq(2)
+        end
       end
     end
   end
@@ -137,6 +209,18 @@ describe ModelView do
 
         scope_fields = dummy_class.scopes[:foo_scope][:fields]
         expect(scope_fields.keys).to eq([:field_1, :field_2, :field_3])
+      end
+
+      context "when a parent class has been defined" do
+        it "merges parent class fields and child fields to the current scope" do
+          dummy_class.scope(:foo_scope) { fields :field_1, :field_2, :field_3 }
+
+          child_class = Class.new(dummy_class)
+          child_class.scope(:foo_scope) { fields :field_4 }
+
+          scope_fields = child_class.scopes[:foo_scope][:fields]
+          expect(scope_fields.keys).to eq([:field_1, :field_2, :field_3, :field_4])
+        end
       end
     end
 
