@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.6.1
+* Fix inheritance bug overwriting parent scope
+
 # 0.6.0
 * One level of inheritance from the parent class
 

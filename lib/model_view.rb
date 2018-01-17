@@ -1,5 +1,6 @@
 require 'model_view/resolver'
 require 'model_view/updater'
+require 'active_support/core_ext/object'
 
 module ModelView
 
@@ -102,7 +103,7 @@ module ModelView
 
   def create_scopes
     if self.superclass.respond_to?(:scopes) && @scopes.nil?
-      @scopes = self.superclass.scopes
+      @scopes = self.superclass.scopes.deep_dup
     elsif @scopes.nil?
       @scopes = { ROOT =>  new_opts }
     end
