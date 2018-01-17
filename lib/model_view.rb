@@ -74,18 +74,18 @@ module ModelView
   end
 
   def add_after_update(scope, block)
-    @scopes ||= {ROOT =>  new_opts}
+    create_scopes
     @scopes[scope] ||= new_opts
     @scopes[scope][:after_update] = block
   end
 
   def add_scope(scope_name)
-    @scopes ||= {ROOT => new_opts}
-    @scopes[scope_name] = new_opts
+    create_scopes
+    @scopes[scope_name] = new_opts unless @scopes.key?(scope_name)
   end
 
   def add_field(scope, field_name, args, block)
-    @scopes ||= {ROOT =>  new_opts}
+    create_scopes
     @scopes[scope] ||= new_opts
     cleaned_args = args.select{ |k| k != :setter}
     if args[:setter]
@@ -95,9 +95,17 @@ module ModelView
   end
 
   def add_setter(scope, field_name, args, block)
-    @scopes ||= {ROOT =>  new_opts}
+    create_scopes
     @scopes[scope] ||= new_opts
     @scopes[scope][:setters][field_name] = {args: args, block: block}
+  end
+
+  def create_scopes
+    if self.superclass.respond_to?(:scopes) && @scopes.nil?
+      @scopes = self.superclass.scopes
+    elsif @scopes.nil?
+      @scopes = { ROOT =>  new_opts }
+    end
   end
 
 end
