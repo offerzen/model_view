@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.6.0
+* One level of inheritance from the parent class
+
 # 0.5.0
 * Transfer field args to setters
 
