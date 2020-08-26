@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.6.2
+* Upgrade rake and bundler version
+
 # 0.6.1
 * Fix inheritance bug overwriting parent scope
 
