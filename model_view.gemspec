@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "semvergen", "~> 1.9"
   spec.add_development_dependency "bundler", "~> 2.1.4"
-  spec.add_development_dependency "rake",    "~> 12.3.3"
+  spec.add_development_dependency "rake",    "~> 13.0.6"
   spec.add_development_dependency "rspec",   "~> 3.0"
   spec.add_development_dependency "pry",     "~> 0.10"
   spec.add_development_dependency "rails",     "~> 5.1.4"
