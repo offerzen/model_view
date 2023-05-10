@@ -5,7 +5,7 @@ ModelView let's you define views for your models in one place.
 
 ### Why ModelView?
 
-At OfferZen, most of our rails models can be presented in al least two ways. For example, an Interview Request
+At OfferZen, most of our rails models can be presented in at least two ways. For example, an Interview Request
 is presented differently to a candidate than to a company. But, there are also a lot of fields that get presented
 the same to both candidates and companies. We found ourselves duplicating a lot of our serialisation code in our
 controllers and the code started to get out of hand.
